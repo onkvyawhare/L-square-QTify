@@ -1,54 +1,35 @@
-const getTopSongsData = async () => {
-    try {
-      const songs = await getData(
-        'https://qtify-backend-labs.crio.do/albums/top'
-      );
-      return songs;
-    } catch (error) {
-      console.log(error);
-      return [];
+import axios from 'axios'
+
+export const BACKEND_ENPOINT = "https://qtify-backend-labs.crio.do"
+
+export const fetchTopAlbums = async() => {
+    try{
+        const res = await axios.get(`${BACKEND_ENPOINT}/albums/top`);
+        console.log(res.data)
+        return res.data
+    }catch(error){
+        console.log(error)
+        return null
     }
-  };
-  const getNewSongsData = async () => {
-    try {
-      const songs = await getData(
-        'https://qtify-backend-labs.crio.do/albums/new'
-      );
-      return songs;
-    } catch (error) {
-      console.log(error);
-      return [];
+}
+export const fetchNewAlbums = async() => {
+    try{
+        const res = await axios.get(`${BACKEND_ENPOINT}/albums/new`);
+        return res.data
     }
-  };
-  const getSongsData = async () => {
-    try {
-      const songs = await getData('https://qtify-backend-labs.crio.do/songs');
-      return songs;
-    } catch (error) {
-      console.log(error);
-      return [];
+    catch(error){
+        console.log(error)
+        return null
     }
-  };
-  
-  const getGenresData = async () => {
-    try {
-      const genres = await getData('https://qtify-backend-labs.crio.do/genres');
-      return genres.data;
-    } catch (error) {
-      console.log(error);
-      return [];
+}
+
+export const fetchSongs = async() => {
+    try{
+        const res = await axios.get(`${BACKEND_ENPOINT}/songs`);
+        return res.data
     }
-  };
-  
-  const getData = async (url) => {
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(error);
-      return [];
+    catch(error){
+        console.log(error)
+        return null
     }
-  };
-  
-  export { getTopSongsData, getNewSongsData, getSongsData, getGenresData };
+}

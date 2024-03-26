@@ -1,40 +1,68 @@
 import { useState, useEffect } from 'react';
 import Navbar from './components/navbar/navbar';
 import Hero from './components/Hero/Hero';
-import CardSection from './components/Cardsection/Cardsection';
-import { getTopSongsData, getNewSongsData,getSongsData } from './api/api';
+import styles from './App.module.css'
+import { fetchTopAlbums, fetchNewAlbums } from './api/api';
+import Section from './components/Section/Section';
 
 
 
 function App() {
 
+  const [topAlbumSongs, setTopAlbumSongs] = useState([]);
+  const [newAlbumSongs, setNewAlbumSongs] = useState([]);
 
-  const [topSongsData, setTopSongsData] = useState([]);
-  const [newSongsData, setNewSongsData] = useState([]);
-   const [songsData, setSongsData] = useState([]);
+
+  const generateTopAlbumSongs = async () => {
+    try {
+      const topAlbumSongs = await fetchTopAlbums()
+      setTopAlbumSongs(topAlbumSongs)
+    }
+    catch (error) {
+      console.log(error)
+      return null
+    }
+
+  }
+  const generateNewAlbumSongs = async () => {
+    try {
+      const newAlbumSongs = await fetchNewAlbums()
+      setNewAlbumSongs(newAlbumSongs);
+      // setFilteredDataValues(newAlbumSongs);
+    }
+    catch (error) {
+      console.log(error)
+      return null
+    }
+  }
+
 
   useEffect(() => {
-    (async () => {
-      const topSongsData = await getTopSongsData();
-      setTopSongsData(topSongsData);
+    
+    generateTopAlbumSongs();
+    generateNewAlbumSongs();
+    // generateFilterSongs();
+    // setFilteredDataValues(newAlbumSongs);
 
-      const newSongsData = await getNewSongsData();
-      setNewSongsData(newSongsData);
+  }, [])
 
-       const songsData = await getSongsData();
-       setSongsData(songsData);
-    })();
-  }, []);
+
+
+  
+  
   return (
-    <div>
+      <div>
        <Navbar />
        <Hero/>
+        <div className={styles.sectionWrapper}>
+          <Section type='album' title='Top Albums' data={topAlbumSongs} />
+          <Section type='album' title='New Albums' data={newAlbumSongs} />
        
-       <CardSection name="Top Albums" songsData={topSongsData} />
-        <CardSection name="New Albums" songsData={newSongsData} />
-        <CardSection name="Songs" songsData={songsData} showFilters />
+        </div>
+       
+       
       
-    </div>
+      </div>
   );
 }
 
